@@ -1,34 +1,26 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
-import ToDosPage from './components/todos/ToDosPage';
-import {create as createToDo} from './actions/todos';
+import ReactDOM from 'react-dom';
+import Mapa from './Mapa';
 
 
 class App extends Component {
   
-  onCreateToDo(todo){
-    this.props.dispatch(createToDo(todo));
-  }
 
   
   render() {
     return (
       <div className="main­content">
-        <ToDosPage todos={this.props.todos} 
-        creator = {this.onCreateToDo.bind(this)}/>
+        Hola Mundo!
       </div>
     );
   }
 }
 
-function mapStateToProps(state){
-  return {
-    todos: state.todos,
-  }
-}
 
-
-
-export default connect(mapStateToProps)(App);
+ReactDOM.render(
+    <App />
+,
+  document.getElementById('root')    
+);
 
 
