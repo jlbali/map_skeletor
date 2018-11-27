@@ -11,6 +11,7 @@ class App extends Component {
     return (
       <div className="main­content">
         Hola Mundo!
+        <Mapa />
       </div>
     );
   }

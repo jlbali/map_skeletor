@@ -8,7 +8,6 @@ class Mapa extends Component {
   render() {
     return (
       <div className="main­content">
-          Aca habria un mapa!!
           <div id="mapa"></div>
       </div>
     );
@@ -25,9 +24,18 @@ class Mapa extends Component {
       id: 'mapbox.streets',
       accessToken: 'your.mapbox.access.token'
     });
+    
+    // Capa Google Satellite.
+    var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+      maxZoom: 20,
+      subdomains:['mt0','mt1','mt2','mt3']
+    });
+
+    
     // Agregándolo al mapa.
     //mapboxLayer.addTo(myMap);
-
+    googleSat.addTo(myMap);
+    console.log("prueba");
 
   }
 
