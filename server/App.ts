@@ -47,6 +47,7 @@ class App {
       //console.log("Query: ", req.query);
       //console.log("req: ", req);
       var url = req.query.url;
+      console.log("Levantando de ", url);
       var response = await axios.get(url);
       //console.log("Response data: ", response.data);
       res.send(response.data);

@@ -44,6 +44,18 @@ var addGeoJSON = async function(url,map){
   L.geoJSON(geojson).addTo(map);
 }
 
+var addKML = async function(url, map){
+  var proxyURL = "/api/proxy?url=" + url;
+  var runLayer = omnivore.kml(proxyURL)
+  .on('ready', function() {
+    //map.fitBounds(runLayer.getBounds());            
+    console.log("KML levantado...");
+    runLayer.eachLayer(function(layer) {            
+      layer.bindPopup(layer.feature.properties.description);
+    });
+  })
+  .addTo(map);
+}
 
 
 
@@ -91,6 +103,7 @@ class Mapa extends Component {
     //await addGeoJSON("http://oceanview.pfeg.noaa.gov/erddap/tabledap/erdCalCOFIcufes.geoJson?longitude%2Clatitude%2Csardine_eggs&cruise=%22201504%22&sardine_eggs%3E=0&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff", myMap);
     
     // KML
+    await addKML("https://developers.google.com/kml/documentation/KML_Samples.kml", myMap);
 
   }
 
