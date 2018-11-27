@@ -3,13 +3,20 @@ import axios from 'axios';
 import $ from 'jquery';
 
 
-var addGeoRSS = async function(url,map){
+var getProxyURL = async function(url){
   var response = await axios.get("/api/proxy", {
     params: {
       url: url,
     }
   });
-  var xml = response.data;
+  return response.data;
+
+}
+
+
+var addGeoRSS = async function(url,map){
+
+  var xml = await getProxyURL(url);
   //console.log("XML: ", xml);
   var output = {};
   $(xml).find('item').each(function() {
@@ -31,6 +38,11 @@ var addGeoRSS = async function(url,map){
 
 }
 
+
+var addGeoJSON = async function(url,map){
+  var geojson = await getProxyURL(url);
+  L.geoJSON(geojson).addTo(map);
+}
 
 
 
@@ -74,8 +86,11 @@ class Mapa extends Component {
     // Carga de GeoRSS.
     // UK seismology
     await addGeoRSS("http://earthquakes.bgs.ac.uk/feeds/WorldSeismology.xml", myMap);
-
-
+    
+    // Carga de GeoJSON
+    //await addGeoJSON("http://oceanview.pfeg.noaa.gov/erddap/tabledap/erdCalCOFIcufes.geoJson?longitude%2Clatitude%2Csardine_eggs&cruise=%22201504%22&sardine_eggs%3E=0&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff", myMap);
+    
+    // KML
 
   }
 
