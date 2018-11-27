@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as bluebird from 'bluebird';
 import * as mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
-
+import * as axios from 'axios';
 
 class App {
   public express;
@@ -13,7 +13,8 @@ class App {
     this.express = express();
     this.enableCors();
     this.enablePublic();
-  
+    this.proxy();
+    
   }
 
   private enableCors(): void {
@@ -37,6 +38,19 @@ class App {
   public async listen(port:number) {
     await this.express.listen(port);
     console.log("Servidor activo en puerto " + port);
+  }
+
+  public proxy(){
+    this.express.get("/api/proxy", async function(req, res, next){
+      //console.log("Body: ", req.body);
+      //console.log("Params: ", req.params);
+      //console.log("Query: ", req.query);
+      //console.log("req: ", req);
+      var url = req.query.url;
+      var response = await axios.get(url);
+      //console.log("Response data: ", response.data);
+      res.send(response.data);
+    });
   }
 
 }
