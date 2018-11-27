@@ -57,7 +57,12 @@ var addKML = async function(url, map){
   .addTo(map);
 }
 
-
+var addWMS = async function(url, layer, map){
+  //var proxyURL = "/api/proxy?url=" + url;
+  var wmsLayer = L.tileLayer.wms(url, {
+		layers: layer
+	}).addTo(map);
+}
 
 
 class Mapa extends Component {
@@ -104,7 +109,11 @@ class Mapa extends Component {
     
     // KML
     await addKML("https://developers.google.com/kml/documentation/KML_Samples.kml", myMap);
+    await addKML("geouv.citedef.gob.ar/api/kml/0/Clear", myMap); // Este no anda... Raro! Puede ser porque no especifica un archivo y devuelve algo distinto después.
+    // Quizas requiera colocar algo en el response. O puede ser algo del axios.
 
+    // WMS
+    await addWMS("https://demo.boundlessgeo.com/geoserver/ows?", "ne:ne", myMap);
   }
 
 }

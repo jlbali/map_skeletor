@@ -48,7 +48,15 @@ class App {
       //console.log("req: ", req);
       var url = req.query.url;
       console.log("Levantando de ", url);
-      var response = await axios.get(url);
+      /*
+      try {
+        var response = await axios.get(url);
+      } catch(err){
+        console.log("Error!: ", err);
+        console.log("data: ", response.data);
+      }
+      */
+     var response = await axios.get(url);
       //console.log("Response data: ", response.data);
       res.send(response.data);
     });
