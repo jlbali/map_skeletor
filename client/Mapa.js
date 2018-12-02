@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import $ from 'jquery';
+import convert from 'xml-js';
 
 
 var getProxyURL = async function(url){
@@ -14,9 +15,31 @@ var getProxyURL = async function(url){
 }
 
 
+// Changes XML to JSON
+var xmlToJson = function(xml) {
+  return JSON.parse(convert.xml2json(xml, {compact: true, spaces: 4}));
+};
+
+
 var addGeoRSS = async function(url,map){
 
   var xml = await getProxyURL(url);
+  var jsonObj = xmlToJson(xml);
+  var items = jsonObj["rss"]["channel"]["item"];
+  console.log(items);
+  items.forEach(function(item){
+    if (item["georss:where"]){
+      var coordinate = item["georss:where"]["gml:Point"]["gml:pos"]["_text"];
+      var lat = coordinate.split(' ')[0];
+      var long = coordinate.split(' ')[1];
+      var marker = L.marker([parseFloat(lat), parseFloat(long)]);
+      var popupContent = item["description"]["_text"];
+      marker.bindPopup(popupContent)
+      marker.addTo(map);         
+    }
+  });
+  //console.log(json);
+  /*
   //console.log("XML: ", xml);
   var output = {};
   $(xml).find('item').each(function() {
@@ -35,7 +58,7 @@ var addGeoRSS = async function(url,map){
     marker.bindPopup(popupContent)
     marker.addTo(map);
   });
-
+  */
 }
 
 
@@ -102,18 +125,20 @@ class Mapa extends Component {
 
     // Carga de GeoRSS.
     // UK seismology
-    await addGeoRSS("http://earthquakes.bgs.ac.uk/feeds/WorldSeismology.xml", myMap);
-    
+    //await addGeoRSS("http://earthquakes.bgs.ac.uk/feeds/WorldSeismology.xml", myMap);
+    await addGeoRSS("http://capresse.citedef.gob.ar/layers/permalink/JE2vGVk", myMap);
+
     // Carga de GeoJSON
     //await addGeoJSON("http://oceanview.pfeg.noaa.gov/erddap/tabledap/erdCalCOFIcufes.geoJson?longitude%2Clatitude%2Csardine_eggs&cruise=%22201504%22&sardine_eggs%3E=0&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff", myMap);
     
     // KML
     await addKML("https://developers.google.com/kml/documentation/KML_Samples.kml", myMap);
-    await addKML("geouv.citedef.gob.ar/api/kml/0/Clear", myMap); // Este no anda... Raro! Puede ser porque no especifica un archivo y devuelve algo distinto después.
+    //await addKML("geouv.citedef.gob.ar/api/kml/0/Clear", myMap); // Este no anda... Raro! Puede ser porque no especifica un archivo y devuelve algo distinto después.
     // Quizas requiera colocar algo en el response. O puede ser algo del axios.
 
     // WMS
-    await addWMS("https://demo.boundlessgeo.com/geoserver/ows?", "ne:ne", myMap);
+    //await addWMS("https://demo.boundlessgeo.com/geoserver/ows?", "ne:ne", myMap);
+    await addWMS("http://ows.terrestris.de/osm/service", "TOPO-WMS", myMap);
   }
 
 }
