@@ -10,7 +10,7 @@ class App extends Component {
   render() {
     return (
       <div className="main­content">
-        Hola Mundo!
+        Compositor de Mapas
         <Mapa />
       </div>
     );
