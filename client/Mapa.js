@@ -21,12 +21,12 @@ var xmlToJson = function(xml) {
 };
 
 
-var addGeoRSS = async function(url,map){
+var addExternalGeoRSS = async function(url,map){
 
   var xml = await getProxyURL(url);
   var jsonObj = xmlToJson(xml);
   var items = jsonObj["rss"]["channel"]["item"];
-  console.log(items);
+  //console.log(items);
   items.forEach(function(item){
     if (item["georss:where"]){
       var coordinate = item["georss:where"]["gml:Point"]["gml:pos"]["_text"];
@@ -34,7 +34,7 @@ var addGeoRSS = async function(url,map){
       var long = coordinate.split(' ')[1];
       var marker = L.marker([parseFloat(lat), parseFloat(long)]);
       var popupContent = item["description"]["_text"];
-      marker.bindPopup(popupContent)
+      marker.bindPopup(popupContent);
       marker.addTo(map);         
     }
   });
@@ -61,13 +61,52 @@ var addGeoRSS = async function(url,map){
   */
 }
 
+var addExternalCAP = async function(url, map){
+  var xml = await getProxyURL(url);
+  var jsonObj = xmlToJson(xml);
+  console.log(jsonObj);  
+  var infos = jsonObj.alert.info;
+  infos.forEach(function(info){
+    var polygon = info.area.polygon["_text"];
+    var coordinates = polygon.split(" ");
+    var latLongs = [];
+    coordinates.forEach(function(coordinate){
+      latLongs.push([parseFloat(coordinate.split(",")[0]), parseFloat(coordinate.split(",")[1])]);
+    });
+    console.log("Lat Longs: ", latLongs);
+    
+    var popupContent = "Certainty: " + info.certainty["_text"] + " <br> Severity: " + info.severity["_text"] + " <br> Urgency: " + info.urgency["_text"];
+    var color;
+    if (info.severity["_text"] == "Extreme"){
+      color = "red";
+    } else if (info.severity["_text"] == "Severe"){
+      color = "orange";
+    } else if (info.severity["_text"] == "Moderate"){
+      color = "yellow";
+    } else if (info.severity["_text"] == "Minor"){
+      color = "green";
+    } else {
+      color = "white";
+    }
+    var polygonObj = L.polygon(latLongs, {color: color});
+    polygonObj.bindPopup(popupContent);
+    polygonObj.addTo(map);
+  });
+}
+/*
+extreme,
+minor,
+moderate,
+severe,
+unknown
+*/
 
-var addGeoJSON = async function(url,map){
+var addExternalGeoJSON = async function(url,map){
   var geojson = await getProxyURL(url);
   L.geoJSON(geojson).addTo(map);
 }
 
-var addKML = async function(url, map){
+var addExternalKML = async function(url, map){
   var proxyURL = "/api/proxy?url=" + url;
   var runLayer = omnivore.kml(proxyURL)
   .on('ready', function() {
@@ -126,13 +165,17 @@ class Mapa extends Component {
     // Carga de GeoRSS.
     // UK seismology
     //await addGeoRSS("http://earthquakes.bgs.ac.uk/feeds/WorldSeismology.xml", myMap);
-    await addGeoRSS("http://capresse.citedef.gob.ar/layers/permalink/JE2vGVk", myMap);
+    await addExternalGeoRSS("http://capresse.citedef.gob.ar/layers/permalink/JE2vGVk", myMap);
+
+    // CAP
+    await addExternalCAP("http://capresse.citedef.gob.ar/layers/permalink/Ypwlm81", myMap);
+
 
     // Carga de GeoJSON
     //await addGeoJSON("http://oceanview.pfeg.noaa.gov/erddap/tabledap/erdCalCOFIcufes.geoJson?longitude%2Clatitude%2Csardine_eggs&cruise=%22201504%22&sardine_eggs%3E=0&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff", myMap);
     
     // KML
-    await addKML("https://developers.google.com/kml/documentation/KML_Samples.kml", myMap);
+    await addExternalKML("https://developers.google.com/kml/documentation/KML_Samples.kml", myMap);
     //await addKML("geouv.citedef.gob.ar/api/kml/0/Clear", myMap); // Este no anda... Raro! Puede ser porque no especifica un archivo y devuelve algo distinto después.
     // Quizas requiera colocar algo en el response. O puede ser algo del axios.
 
