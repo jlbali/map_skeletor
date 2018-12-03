@@ -171,6 +171,7 @@ class Mapa extends Component {
     googleSat.addTo(myMap);
     console.log("prueba");
 
+    //return ;
     // Carga de GeoRSS.
     // UK seismology
     //await addGeoRSS("http://earthquakes.bgs.ac.uk/feeds/WorldSeismology.xml", myMap);
@@ -180,7 +181,7 @@ class Mapa extends Component {
     // CAP
     await addExternalCAP("http://capresse.citedef.gob.ar/layers/permalink/Ypwlm81", myMap);
 
-
+    //return ;
     // Carga de GeoJSON
     //await addGeoJSON("http://oceanview.pfeg.noaa.gov/erddap/tabledap/erdCalCOFIcufes.geoJson?longitude%2Clatitude%2Csardine_eggs&cruise=%22201504%22&sardine_eggs%3E=0&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff", myMap);
     
