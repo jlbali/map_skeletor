@@ -166,6 +166,7 @@ class Mapa extends Component {
     // UK seismology
     //await addGeoRSS("http://earthquakes.bgs.ac.uk/feeds/WorldSeismology.xml", myMap);
     await addExternalGeoRSS("http://capresse.citedef.gob.ar/layers/permalink/JE2vGVk", myMap);
+    await addExternalGeoRSS(" http://www.sistema-crisis.gob.ar/volcanes.xml", myMap);
 
     // CAP
     await addExternalCAP("http://capresse.citedef.gob.ar/layers/permalink/Ypwlm81", myMap);
