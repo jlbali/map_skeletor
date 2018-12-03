@@ -21,7 +21,7 @@ var xmlToJson = function(xml) {
 };
 
 
-var addExternalGeoRSS = async function(url,map){
+var addExternalGeoRSS = async function(url,color,map){
 
   var xml = await getProxyURL(url);
   var jsonObj = xmlToJson(xml);
@@ -32,7 +32,9 @@ var addExternalGeoRSS = async function(url,map){
       var coordinate = item["georss:where"]["gml:Point"]["gml:pos"]["_text"];
       var lat = coordinate.split(' ')[0];
       var long = coordinate.split(' ')[1];
-      var marker = L.marker([parseFloat(lat), parseFloat(long)]);
+      //var marker = L.marker([parseFloat(lat), parseFloat(long)]);
+      var latlng = L.latLng(parseFloat(lat), parseFloat(long));
+      var marker = L.circleMarker(latlng, {color: color, fillOpacity: 0.8});
       if (item["description"]["_text"])
       {
         var popupContent = item["description"]["_text"];  
@@ -42,7 +44,8 @@ var addExternalGeoRSS = async function(url,map){
       
       //console.log("Popup content: ", popupContent);
       marker.bindPopup(popupContent);
-      marker.addTo(map);         
+      marker.addTo(map);
+
     }
   });
   //console.log(json);
@@ -67,7 +70,6 @@ var addExternalGeoRSS = async function(url,map){
   });
   */
 }
-
 var addExternalCAP = async function(url, map){
   var xml = await getProxyURL(url);
   var jsonObj = xmlToJson(xml);
@@ -172,8 +174,8 @@ class Mapa extends Component {
     // Carga de GeoRSS.
     // UK seismology
     //await addGeoRSS("http://earthquakes.bgs.ac.uk/feeds/WorldSeismology.xml", myMap);
-    await addExternalGeoRSS("http://capresse.citedef.gob.ar/layers/permalink/JE2vGVk", myMap);
-    await addExternalGeoRSS(" http://www.sistema-crisis.gob.ar/volcanes.xml", myMap);
+    await addExternalGeoRSS("http://capresse.citedef.gob.ar/layers/permalink/JE2vGVk", "green", myMap);
+    await addExternalGeoRSS(" http://www.sistema-crisis.gob.ar/volcanes.xml", "blue", myMap);
 
     // CAP
     await addExternalCAP("http://capresse.citedef.gob.ar/layers/permalink/Ypwlm81", myMap);
