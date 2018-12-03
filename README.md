@@ -1,12 +1,13 @@
 # map_skeletor
 Visualizador básico de objetos geográficos
 
+Requisitos:
 
-ToDo:
+- NodeJS (última versión).
+(ver página de NodeJS).
+- TypeScript.
 
-- Visualización básica de mapa. (OK)
-- Agregado de capas OSM, Google Maps y Argenmap.
-- Agregado de objetos KML. LISTO ( FALTA agregar KML de GeoUV..., TIRA STATUS CODE 400!!) 
-- Agregado de objetos GeoJSON.
-- Agregado de objetos WMS.
+npm install --save typescript ts-node
+
+
 
