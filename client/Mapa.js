@@ -33,7 +33,14 @@ var addExternalGeoRSS = async function(url,map){
       var lat = coordinate.split(' ')[0];
       var long = coordinate.split(' ')[1];
       var marker = L.marker([parseFloat(lat), parseFloat(long)]);
-      var popupContent = item["description"]["_text"];
+      if (item["description"]["_text"])
+      {
+        var popupContent = item["description"]["_text"];  
+      } else if (item["description"]["_cdata"]){
+        var popupContent = item["description"]["_cdata"];
+      }
+      
+      //console.log("Popup content: ", popupContent);
       marker.bindPopup(popupContent);
       marker.addTo(map);         
     }
@@ -64,7 +71,7 @@ var addExternalGeoRSS = async function(url,map){
 var addExternalCAP = async function(url, map){
   var xml = await getProxyURL(url);
   var jsonObj = xmlToJson(xml);
-  console.log(jsonObj);  
+  //console.log(jsonObj);  
   var infos = jsonObj.alert.info;
   infos.forEach(function(info){
     var polygon = info.area.polygon["_text"];
@@ -73,7 +80,7 @@ var addExternalCAP = async function(url, map){
     coordinates.forEach(function(coordinate){
       latLongs.push([parseFloat(coordinate.split(",")[0]), parseFloat(coordinate.split(",")[1])]);
     });
-    console.log("Lat Longs: ", latLongs);
+    //console.log("Lat Longs: ", latLongs);
     
     var popupContent = "Certainty: " + info.certainty["_text"] + " <br> Severity: " + info.severity["_text"] + " <br> Urgency: " + info.urgency["_text"];
     var color;
