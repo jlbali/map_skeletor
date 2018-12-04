@@ -187,7 +187,8 @@ class Mapa extends Component {
     //return ;
     // Carga de GeoJSON
     //await addGeoJSON("http://oceanview.pfeg.noaa.gov/erddap/tabledap/erdCalCOFIcufes.geoJson?longitude%2Clatitude%2Csardine_eggs&cruise=%22201504%22&sardine_eggs%3E=0&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff", myMap);
-    await addExternalGeoJSON("http://localhost:3000/recursos/poligono.json", myMap);
+    //await addExternalGeoJSON("http://localhost:3000/recursos/poligono.json", myMap);
+    await addExternalGeoJSON("http://localhost:3000/recursos/otroPoligono.json", myMap);
 
 
     // KML
