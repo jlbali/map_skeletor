@@ -112,6 +112,9 @@ unknown
 
 var addExternalGeoJSON = async function(url,map){
   var geojson = await getProxyURL(url);
+  //console.log(geojson);
+  var cadenaJson = JSON.stringify(geojson);
+  console.log(cadenaJson);
   L.geoJSON(geojson).addTo(map);
 }
 
@@ -184,7 +187,9 @@ class Mapa extends Component {
     //return ;
     // Carga de GeoJSON
     //await addGeoJSON("http://oceanview.pfeg.noaa.gov/erddap/tabledap/erdCalCOFIcufes.geoJson?longitude%2Clatitude%2Csardine_eggs&cruise=%22201504%22&sardine_eggs%3E=0&.draw=markers&.marker=5%7C5&.color=0x000000&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff", myMap);
-    
+    await addExternalGeoJSON("http://localhost:3000/recursos/poligono.json", myMap);
+
+
     // KML
     await addExternalKML("https://developers.google.com/kml/documentation/KML_Samples.kml", myMap);
     //await addKML("geouv.citedef.gob.ar/api/kml/0/Clear", myMap); // Este no anda... Raro! Puede ser porque no especifica un archivo y devuelve algo distinto después.
